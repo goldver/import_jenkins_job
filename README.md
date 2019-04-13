@@ -18,10 +18,11 @@ The job will requires next inputs:
 python3 export_job.py -r my_repo -s docker_test
 
 Jenkins
-<#!/bin/bash -xe>
+------------
+<--#!/bin/bash -xe-->
 
-<cd $WORKSPACE/docker_automation_job>
-<python3 export_job.py -r $REPO_NAME -s $SERVICE_NAME>
+<--cd $WORKSPACE/docker_automation_job-->
+<--python3 export_job.py -r $REPO_NAME -s $SERVICE_NAME-->
 
 Contributing
 ------------
