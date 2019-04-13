@@ -1,0 +1,81 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.32">
+  <actions/>
+  <description>&lt;header&gt;&#xd;
+    &lt;h3&gt; This job builds Docker image for {{ service_name }} service &lt;/h3&gt;&#xd;
+&lt;/header&gt;&#xd;
+&#xd;
+</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.29.4">
+      <projectUrl>git@github.com:goldver/{{ repo_suffix }}.git/</projectUrl>
+      <displayName></displayName>
+    </com.coravy.hudson.plugins.github.GithubProjectProperty>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.30">
+      <autoRebuild>false</autoRebuild>
+      <rebuildDisabled>false</rebuildDisabled>
+    </com.sonyericsson.rebuild.RebuildSettings>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>SERVICE_NAME</name>
+          <description>&lt;header&gt;
+&lt;h3&gt; Name of folder to work on &lt;/h3&gt;
+&lt;/header&gt;</description>
+          <defaultValue>{{ service_name }}</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>TAG</name>
+          <description>&lt;header&gt;
+&lt;h3&gt; Add tag to image &lt;/h3&gt;
+&lt;/header&gt;</description>
+          <defaultValue>bv_{{ service_name }}</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>BRANCH</name>
+          <description>&lt;header&gt;
+&lt;h3&gt; Branch name &lt;/h3&gt;
+&lt;/header&gt;</description>
+          <defaultValue>master</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers>
+        <hudson.triggers.TimerTrigger>
+          <spec>H 3 * * * </spec>
+        </hudson.triggers.TimerTrigger>
+        <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.29.4">
+          <spec></spec>
+        </com.cloudbees.jenkins.GitHubPushTrigger>
+      </triggers>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@2.65">
+    <scm class="hudson.plugins.git.GitSCM" plugin="git@3.9.3">
+      <configVersion>2</configVersion>
+      <userRemoteConfigs>
+        <hudson.plugins.git.UserRemoteConfig>
+          <url>git@github.com:goldver/{{ repo_suffix }}.git</url>
+          <credentialsId>xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx</credentialsId>
+        </hudson.plugins.git.UserRemoteConfig>
+      </userRemoteConfigs>
+      <branches>
+        <hudson.plugins.git.BranchSpec>
+          <name>*/$BRANCH</name>
+        </hudson.plugins.git.BranchSpec>
+      </branches>
+      <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+      <submoduleCfg class="list"/>
+      <extensions/>
+    </scm>
+    <scriptPath>Jenkinsfile</scriptPath>
+    <lightweight>false</lightweight>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
